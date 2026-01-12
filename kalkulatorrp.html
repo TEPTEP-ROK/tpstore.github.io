@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalkulator SDA RoK (Rupiah)</title>
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #eef4fb;
+  padding: 20px;
+}
+.container {
+  max-width: 600px;
+  margin: auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+h2 {
+  text-align: center;
+  color: #007bff;
+}
+label {
+  font-weight: bold;
+  margin-top: 15px;
+  display: block;
+}
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+.hasil {
+  margin-top: 20px;
+  background: #f4faff;
+  padding: 15px;
+  border-radius: 8px;
+  line-height: 1.6;
+}
+strong {
+  color: #007bff;
+}
+.note {
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h2>Kalkulator Harga SDA RoK (IDR)</h2>
+
+<label>Harga per 1M Food (Rp):</label>
+<input type="number" id="foodPrice" placeholder="Contoh: 1300">
+
+<label>Jumlah Food (M):</label>
+<input type="number" id="foodQty" placeholder="Contoh: 200">
+
+<label>Harga per 1M Wood (Rp):</label>
+<input type="number" id="woodPrice" placeholder="Contoh: 1300">
+
+<label>Jumlah Wood (M):</label>
+<input type="number" id="woodQty" placeholder="Contoh: 200">
+
+<label>Harga per 1M Stone (Rp):</label>
+<input type="number" id="stonePrice" placeholder="Contoh: 1500">
+
+<label>Jumlah Stone (M):</label>
+<input type="number" id="stoneQty" placeholder="Contoh: 200">
+
+<label>Harga per 1M Gold (Rp):</label>
+<input type="number" id="goldPrice" placeholder="Contoh: 1800">
+
+<label>Jumlah Gold (M):</label>
+<input type="number" id="goldQty" placeholder="Contoh: 200">
+
+<div class="hasil" id="hasil">
+Masukkan harga & jumlah SDA untuk melihat total.
+</div>
+
+<div class="note">Otomatis dihitung • Harga lokal Rupiah</div>
+</div>
+
+<script>
+const inputs = document.querySelectorAll("input");
+const hasil = document.getElementById("hasil");
+
+function formatRp(n) {
+  return "Rp" + n.toLocaleString("id-ID");
+}
+
+function hitung() {
+  const data = [
+    {name:"Food", p:foodPrice.value, q:foodQty.value},
+    {name:"Wood", p:woodPrice.value, q:woodQty.value},
+    {name:"Stone", p:stonePrice.value, q:stoneQty.value},
+    {name:"Gold", p:goldPrice.value, q:goldQty.value},
+  ];
+
+  let total = 0;
+  let detail = "";
+
+  data.forEach(d => {
+    const price = parseFloat(d.p);
+    const qty = parseFloat(d.q);
+    if (!isNaN(price) && !isNaN(qty) && price > 0 && qty > 0) {
+      const subtotal = price * qty;
+      total += subtotal;
+      detail += `- ${d.name}: ${formatRp(subtotal)}<br>`;
+    }
+  });
+
+  if (total === 0) {
+    hasil.innerHTML = "Masukkan harga dan jumlah SDA.";
+    return;
+  }
+
+  hasil.innerHTML = `
+    ${detail}<br>
+    <strong>Total Bayar:</strong><br>
+    <strong>${formatRp(total)}</strong>
+  `;
+}
+
+inputs.forEach(i => i.addEventListener("input", hitung));
+</script>
+
+</body>
+</html>
