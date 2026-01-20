@@ -1,257 +1,184 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Pembagian SDA Aliansi</title>
+<meta charset="UTF-8">
+<title>Pembagian RSS Sama Rata</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{font-family:Arial,sans-serif;background:#f1f5f9;margin:0;padding:10px}
-.container{background:#fff;padding:12px;border-radius:10px;max-width:100%}
-h2,h3{text-align:center;margin:10px 0}
+body{font-family:Arial;background:#020617;color:#e5e7eb;padding:14px}
+h2{text-align:center}
+.card{border:1px solid #1e293b;border-radius:8px;padding:12px;margin-bottom:14px}
+input{width:100%;padding:6px;margin:4px 0;background:#020617;color:#e5e7eb;border:1px solid #334155;border-radius:6px}
+button{padding:10px;width:100%;background:#2563eb;color:#fff;border:none;border-radius:6px;margin-top:6px}
+button.secondary{background:#475569}
 table{width:100%;border-collapse:collapse;margin-top:8px}
-th,td{border:1px solid #ddd;padding:6px;font-size:13px;text-align:center}
-th{background:#e5e7eb}
-input{width:100%;padding:6px;font-size:14px}
-button{width:100%;padding:10px;margin-top:8px;border:none;border-radius:8px;font-size:15px;color:white;background:#16a34a}
-button.blue{background:#2563eb}
-button.red{background:#dc2626}
-.section{margin-top:15px;padding-top:10px;border-top:2px dashed #ddd}
-small{color:#555}
+th,td{border:1px solid #334155;padding:6px;text-align:center}
+.result{white-space:pre-line;background:#020617;border:1px solid #334155;padding:10px;border-radius:6px;margin-top:10px}
+.check{transform:scale(1.2)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 </style>
 </head>
-<script>
-(function(){
-  const PASSWORD = "657";
-  const STORAGE_KEY = "teptep_auth";
-  const EXPIRE_DAYS = 30;
 
-  const now = new Date().getTime();
-  const saved = localStorage.getItem(STORAGE_KEY);
-
-  // Jika masih dalam masa aktif → langsung masuk
-  if (saved && now < parseInt(saved)) {
-    return;
-  }
-
-  // Minta password
-  const input = prompt("Apakah kamu TEPTEP?\nMasukkan password");
-
-  if (input === PASSWORD) {
-    const expireTime = now + (EXPIRE_DAYS * 24 * 60 * 60 * 1000);
-    localStorage.setItem(STORAGE_KEY, expireTime.toString());
-    alert("✅ Akses diterima");
-  } else {
-    document.body.innerHTML = `
-      <div style="
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        height:100vh;
-        background:#0f172a;
-        color:white;
-        font-family:Arial;
-        text-align:center;
-      ">
-        <div>
-          <h2>⛔ Akses Ditolak</h2>
-          <p>Password salah</p>
-        </div>
-      </div>
-    `;
-    throw new Error("Akses ditolak");
-  }
-})();
-</script>
 <body>
-<div class="container">
-<h2>📦 Pembagian SDA Aliansi</h2>
-<small>Format: <b>1 = 1M</b></small>
 
-<div class="section">
-<h3>Ambil Stok Anggota</h3>
-<button class="blue" onclick="loadStokCSV()">🔄 Ambil Stok dari CSV</button>
+<h2>Pembagian Sumberdaya Sama Rata</h2>
+
+<div class="card">
+<h3>Kebutuhan Buyer (M)</h3>
+<input id="bJ" type="number" placeholder="Jagung">
+<input id="bK" type="number" placeholder="Kayu">
+<input id="bB" type="number" placeholder="Batu">
+<input id="bE" type="number" placeholder="Emas">
 </div>
 
-<div class="section">
-<h3>Pesanan Pembeli</h3>
-<table>
-<tr><td>Jagung</td><td><input id="orderJagung" type="number"></td>
-<td>Kayu</td><td><input id="orderKayu" type="number"></td></tr>
-<tr><td>Batu</td><td><input id="orderBatu" type="number"></td>
-<td>Emas</td><td><input id="orderEmas" type="number"></td></tr>
-</table>
+<div class="card">
+<h3>Rate Bayar Anggota (Rp / 1M)</h3>
+<input id="rJ" type="number" placeholder="Jagung">
+<input id="rK" type="number" placeholder="Kayu">
+<input id="rB" type="number" placeholder="Batu">
+<input id="rE" type="number" placeholder="Emas">
 </div>
 
-<div class="section">
-<h3>Data Anggota & Stok (Manual)</h3>
-<input type="number" id="jumlahAnggota" value="5">
-<button onclick="buatTabelManual()">Buat Tabel Manual</button>
-<form id="anggotaForm"></form>
+<div class="card">
+<button onclick="ambilSheet()">Ambil Stok dari Google Sheet</button>
 </div>
 
-<button onclick="hitungPengiriman()">Hitung Pembagian</button>
+<div class="card">
+<h3>Data Anggota</h3>
 
-<div class="section">
-<h3>Hasil SDA Kirim</h3>
-<table id="hasilTable">
-<thead><tr><th>Nama</th><th>Jagung</th><th>Kayu</th><th>Batu</th><th>Emas</th></tr></thead>
-<tbody></tbody>
-</table>
+<div class="grid2">
+<button onclick="centangSemua()">Centang Semua</button>
+<button class="secondary" onclick="lepasSemua()">Lepas Semua</button>
 </div>
 
-<div class="section">
-<h3>Rate (Rp / 1M)</h3>
-<table>
-<tr><td>Jagung</td><td><input id="rateJagung"></td>
-<td>Kayu</td><td><input id="rateKayu"></td></tr>
-<tr><td>Batu</td><td><input id="rateBatu"></td>
-<td>Emas</td><td><input id="rateEmas"></td></tr>
-</table>
-<button onclick="hitungPenghasilan()">Hitung Penghasilan</button>
+<div id="tabel"></div>
 </div>
 
-<div class="section">
-<h3>Penghasilan Anggota</h3>
-<table id="penghasilanTable">
-<thead><tr><th>Nama</th><th>Jagung</th><th>Kayu</th><th>Batu</th><th>Emas</th><th>Total</th></tr></thead>
-<tbody></tbody>
-</table>
-
-<button class="red" onclick="resetSemua()">RESET</button>
-</div>
+<div class="card">
+<button onclick="hitung()">Hitung Pembagian</button>
+<button onclick="salinKirim()">Salin Pembagian Kirim</button>
+<button onclick="salinAll()">Salin Seluruh Hasil</button>
+<div id="hasil" class="result"></div>
 </div>
 
 <script>
-// 📌 LINK CSV GOOGLESHEET
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSKun1JF9TKDdbbLewywcz7Kh51koV2WiSMzD6ttZXRSGA9b4C5J-4H0_PCO2AMg9SimLvi8zCGvcVd/pub?output=csv";
+const sheetURL="https://docs.google.com/spreadsheets/d/e/2PACX-1vSKun1JF9TKDdbbLewywcz7Kh51koV2WiSMzD6ttZXRSGA9b4C5J-4H0_PCO2AMg9SimLvi8zCGvcVd/pub?output=csv";
 
-// 🧠 Parse CSV jadi Array of Objects
-async function loadStokCSV(){
-  try {
-    const res = await fetch(CSV_URL);
-    const text = await res.text();
-    const lines = text.trim().split("\n");
-    const headers = lines[0].split(",");
-    const data = lines.slice(1).map(line => {
-      const vals = line.split(",");
-      return {
-        nama: vals[0]||"",
-        jagung: Number(vals[1])||0,
-        kayu:   Number(vals[2])||0,
-        batu:   Number(vals[3])||0,
-        emas:   Number(vals[4])||0
-      };
-    });
+let teksKirim="", teksAll="";
 
-    jumlahAnggota.value = data.length;
-    buatTabelManual();
-    data.forEach((a,i)=>{
-      document.getElementById("nama"+(i+1)).value = a.nama;
-      document.getElementById("sj"+(i+1)).value = a.jagung;
-      document.getElementById("sk"+(i+1)).value = a.kayu;
-      document.getElementById("sb"+(i+1)).value = a.batu;
-      document.getElementById("se"+(i+1)).value = a.emas;
-    });
-  } catch(e){
-    alert("Gagal ambil stok CSV");
-    console.error(e);
-  }
-}
-
-function buatTabelManual(){
-  let j = Number(jumlahAnggota.value);
-  let html = `<table>
-    <tr><th>Nama</th><th>Jagung</th><th>Kayu</th><th>Batu</th><th>Emas</th></tr>`;
-  for(let i=1;i<=j;i++){
-    html+=`
-    <tr>
-      <td><input id="nama${i}" placeholder="Anggota ${i}"></td>
-      <td><input id="sj${i}" type="number"></td>
-      <td><input id="sk${i}" type="number"></td>
-      <td><input id="sb${i}" type="number"></td>
-      <td><input id="se${i}" type="number"></td>
-    </tr>`;
-  }
-  html += "</table>";
-  anggotaForm.innerHTML = html;
-}
-
-function bagiSDA(list,key,total){
-  total = Number(total)||0;
-  let aktif = list.filter(a=>a[key]>0);
-  while(total>0 && aktif.length){
-    let per = Math.ceil(total/aktif.length);
-    aktif.forEach(a=>{
-      let ambil = Math.min(per,a[key],total);
-      a[key] -= ambil;
-      total -= ambil;
-      a.kirim[key] += ambil;
-    });
-    aktif = aktif.filter(a=>a[key]>0);
-  }
-}
-
-function hitungPengiriman(){
-  let j = Number(jumlahAnggota.value);
-  let anggota = [];
-  for(let i=1;i<=j;i++){
-    let nama = document.getElementById("nama"+i)?.value;
-    if(!nama) continue;
-    anggota.push({
-      nama,
-      jagung:+document.getElementById("sj"+i).value||0,
-      kayu:  +document.getElementById("sk"+i).value||0,
-      batu:  +document.getElementById("sb"+i).value||0,
-      emas:  +document.getElementById("se"+i).value||0,
-      kirim:{jagung:0,kayu:0,batu:0,emas:0}
-    });
-  }
-  if(!anggota.length) return alert("Isi data anggota");
-
-  bagiSDA(anggota,"jagung",orderJagung.value);
-  bagiSDA(anggota,"kayu",orderKayu.value);
-  bagiSDA(anggota,"batu",orderBatu.value);
-  bagiSDA(anggota,"emas",orderEmas.value);
-
-  let tb = hasilTable.querySelector("tbody");
-  tb.innerHTML="";
-  anggota.forEach(a=>{
-    tb.innerHTML += `
-    <tr>
-      <td>${a.nama}</td>
-      <td>${a.kirim.jagung}</td>
-      <td>${a.kirim.kayu}</td>
-      <td>${a.kirim.batu}</td>
-      <td>${a.kirim.emas}</td>
-    </tr>`;
+function ambilSheet(){
+ fetch(sheetURL)
+ .then(r=>r.text())
+ .then(t=>{
+  let rows=t.trim().split("\n").slice(1);
+  let h='<table><tr><th>Ikut</th><th>Nama</th><th>Jagung</th><th>Kayu</th><th>Batu</th><th>Emas</th></tr>';
+  rows.forEach(r=>{
+   let c=r.split(",");
+   h+=`<tr>
+    <td><input type="checkbox" class="ikut check" checked></td>
+    <td><input class="n" value="${c[0]}"></td>
+    <td><input class="j" type="number" value="${c[1]}"></td>
+    <td><input class="k" type="number" value="${c[2]}"></td>
+    <td><input class="b" type="number" value="${c[3]}"></td>
+    <td><input class="e" type="number" value="${c[4]}"></td>
+   </tr>`;
   });
+  tabel.innerHTML=h;
+ });
 }
 
-function hitungPenghasilan(){
-  let rJ=+rateJagung.value||0, rK=+rateKayu.value||0, rB=+rateBatu.value||0, rE=+rateEmas.value||0;
-  let body=penghasilanTable.querySelector("tbody");
-  body.innerHTML="";
-  hasilTable.querySelectorAll("tbody tr").forEach(r=>{
-    let n=r.children[0].innerText,
-        j=+r.children[1].innerText,
-        k=+r.children[2].innerText,
-        b=+r.children[3].innerText,
-        e=+r.children[4].innerText;
-    let tj=j*rJ, tk=k*rK, tb2=b*rB, te=e*rE;
-    let tot=tj+tk+tb2+te;
-    body.innerHTML+=`
-    <tr>
-      <td>${n}</td><td>${tj}</td><td>${tk}</td><td>${tb2}</td><td>${te}</td><td>${tot}</td>
-    </tr>`;
-  });
+function centangSemua(){
+ document.querySelectorAll(".ikut").forEach(c=>c.checked=true);
 }
 
-function resetSemua(){
-  if(confirm("Reset semua data?")){
-    document.querySelectorAll("input").forEach(i=>i.value="");
-    document.querySelectorAll("tbody").forEach(t=>t.innerHTML="");
+function lepasSemua(){
+ document.querySelectorAll(".ikut").forEach(c=>c.checked=false);
+}
+
+function hitung(){
+ let need={j:+bJ.value||0,k:+bK.value||0,b:+bB.value||0,e:+bE.value||0};
+ let rate={j:+rJ.value||0,k:+rK.value||0,b:+rB.value||0,e:+rE.value||0};
+
+ let ikut=[...document.querySelectorAll(".ikut")];
+ let n=[...document.querySelectorAll(".n")];
+ let sj=[...document.querySelectorAll(".j")];
+ let sk=[...document.querySelectorAll(".k")];
+ let sb=[...document.querySelectorAll(".b")];
+ let se=[...document.querySelectorAll(".e")];
+
+ let aktif=[];
+ for(let i=0;i<n.length;i++){
+  if(ikut[i].checked){
+   aktif.push({
+    nama:n[i].value,
+    stok:{j:+sj[i].value,k:+sk[i].value,b:+sb[i].value,e:+se[i].value},
+    kirim:{j:0,k:0,b:0,e:0}
+   });
   }
+ }
+
+ if(aktif.length===0){
+  alert("Tidak ada anggota yang ikut");
+  return;
+ }
+
+ ["j","k","b","e"].forEach(x=>{
+  let sisa=need[x];
+  while(sisa>0){
+   let jalan=false;
+   for(let a of aktif){
+    if(a.stok[x]-a.kirim[x]>0 && sisa>0){
+     a.kirim[x]++;
+     sisa--;
+     jalan=true;
+    }
+   }
+   if(!jalan) break;
+  }
+ });
+
+ teksKirim="PEMBAGIAN KIRIM RSS\n\n";
+ teksAll=
+`RATE (Rp / 1M)
+🌽 Jagung : Rp ${rate.j.toLocaleString("id-ID")}
+🪵  Kayu   : Rp ${rate.k.toLocaleString("id-ID")}
+🪨  Batu   : Rp ${rate.b.toLocaleString("id-ID")}
+🪙Emas   : Rp ${rate.e.toLocaleString("id-ID")}
+
+HASIL PEMBAGIAN\n\n`;
+
+ let total=0;
+
+ aktif.forEach(a=>{
+  let income=
+   a.kirim.j*rate.j+
+   a.kirim.k*rate.k+
+   a.kirim.b*rate.b+
+   a.kirim.e*rate.e;
+  total+=income;
+
+  teksKirim+=`${a.nama} kirim ${a.kirim.j}/${a.kirim.k}/${a.kirim.b}/${a.kirim.e}\n`;
+
+  teksAll+=`${a.nama}
+Kirim : ${a.kirim.j}/${a.kirim.k}/${a.kirim.b}/${a.kirim.e}
+Penghasilan : Rp ${income.toLocaleString("id-ID")}
+
+`;
+ });
+
+ teksAll+=`TOTAL PENGHASILAN: Rp ${total.toLocaleString("id-ID")}`;
+ hasil.innerText=teksAll;
+}
+
+function salinKirim(){
+ navigator.clipboard.writeText(teksKirim);
+ alert("Pembagian kirim disalin");
+}
+function salinAll(){
+ navigator.clipboard.writeText(teksAll);
+ alert("Seluruh hasil disalin");
 }
 </script>
+
 </body>
-  </html>
+</html>
