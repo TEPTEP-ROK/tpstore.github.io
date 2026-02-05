@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Status Pembayaran SDA</title>
+
+<style>
+:root{
+  --bg:#020617;
+  --card:#020617;
+  --line:#1e293b;
+  --text:#e5e7eb;
+  --sub:#94a3b8;
+  --accent:#38bdf8;
+  --btn:#2563eb;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto;
+  background:var(--bg);
+  color:var(--text);
+}
+.app{
+  max-width:420px;
+  margin:auto;
+  min-height:100vh;
+  padding:16px 14px 24px;
+}
+.header{
+  text-align:center;
+  margin-bottom:16px;
+}
+.header h1{
+  font-size:20px;
+  margin:6px 0 2px;
+}
+.header p{
+  font-size:13px;
+  color:var(--sub);
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:14px;
+  margin-bottom:14px;
+}
+.card h2{
+  font-size:14px;
+  margin:0 0 10px;
+  color:var(--accent);
+}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.field label{
+  font-size:12px;
+  color:var(--sub);
+}
+.field input{
+  width:100%;
+  margin-top:4px;
+  padding:12px;
+  background:var(--bg);
+  border:1px solid var(--line);
+  border-radius:12px;
+  color:var(--text);
+  font-size:14px;
+}
+.result{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.result div{
+  background:#020617;
+  border:1px dashed var(--line);
+  border-radius:12px;
+  padding:10px;
+  text-align:center;
+}
+.result span{
+  display:block;
+  font-size:12px;
+  color:var(--sub);
+}
+.result strong{
+  font-size:15px;
+  color:var(--accent);
+}
+textarea{
+  width:100%;
+  height:190px;
+  background:var(--bg);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  color:var(--text);
+  font-size:13px;
+  resize:none;
+}
+button{
+  width:100%;
+  margin-top:14px;
+  padding:16px;
+  border:none;
+  border-radius:18px;
+  background:linear-gradient(135deg,#2563eb,#38bdf8);
+  color:white;
+  font-size:15px;
+}
+.footer{
+  text-align:center;
+  margin-top:12px;
+  font-size:11px;
+  color:var(--sub);
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<div class="header">
+  <h1>Status Pembayaran SDA</h1>
+  <p>Perhitungan stok & pembayaran</p>
+</div>
+
+<div class="card">
+  <h2>Stok Saya Saat Ini</h2>
+  <div class="grid">
+    <div class="field"><label>Jagung</label><input id="sj"></div>
+    <div class="field"><label>Kayu</label><input id="sk"></div>
+    <div class="field"><label>Batu</label><input id="sb"></div>
+    <div class="field"><label>Emas</label><input id="se"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Sudah Dibayar Buyer</h2>
+  <div class="grid">
+    <div class="field"><label>Jagung</label><input id="dj"></div>
+    <div class="field"><label>Kayu</label><input id="dk"></div>
+    <div class="field"><label>Batu</label><input id="db"></div>
+    <div class="field"><label>Emas</label><input id="de"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Sisa Stok Belum Dibayar</h2>
+  <div class="result">
+    <div><span>Jagung</span><strong id="rj">0</strong></div>
+    <div><span>Kayu</span><strong id="rk">0</strong></div>
+    <div><span>Batu</span><strong id="rb">0</strong></div>
+    <div><span>Emas</span><strong id="re">0</strong></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Penjelasan (Siap Dikirim)</h2>
+  <textarea id="hasil" readonly></textarea>
+</div>
+
+<button onclick="copyText()">📋 Salin Penjelasan</button>
+
+<div class="footer">Perhitungan otomatis • Tampilan mobile</div>
+
+</div>
+
+<script>
+function n(id){return Number(document.getElementById(id).value)||0}
+
+function calc(){
+  let rjv=Math.max(0,n("sj")-n("dj"));
+  let rkv=Math.max(0,n("sk")-n("dk"));
+  let rbv=Math.max(0,n("sb")-n("db"));
+  let rev=Math.max(0,n("se")-n("de"));
+
+  rj.textContent=rjv+"M";
+  rk.textContent=rkv+"M";
+  rb.textContent=rbv+"M";
+  re.textContent=rev+"M";
+
+  hasil.value=
+`Penjelasan Status Pembayaran
+
+Stok saya saat ini:
+Jagung : ${n("sj")}M
+Kayu   : ${n("sk")}M
+Batu   : ${n("sb")}M
+Emas   : ${n("se")}M
+
+Yang sudah dibayar:
+Jagung : ${n("dj")}M
+Kayu   : ${n("dk")}M
+Batu   : ${n("db")}M
+Emas   : ${n("de")}M
+
+Sisa stok yang belum dibayar:
+Jagung : ${rjv}M
+Kayu   : ${rkv}M
+Batu   : ${rbv}M
+Emas   : ${rev}M
+
+Angka di atas adalah sisa stok saya
+yang belum masuk pembayaran.`;
+}
+
+document.querySelectorAll("input").forEach(i=>{
+  i.addEventListener("input",calc);
+});
+
+function copyText(){
+  hasil.select();
+  document.execCommand("copy");
+  alert("Penjelasan berhasil disalin");
+}
+</script>
+
+</body>
+  </html>
