@@ -3,235 +3,280 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TP STORE STOK</title>
+<title>TP STORE 3990</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #0f172a;
-  color: #fff;
-  margin: 0;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:#0a0a0a;
+  color:#f5e6c4;
 }
-.container {
-  max-width: 1000px;
-  margin: auto;
-  padding: 15px;
+
+.container{
+  max-width:480px;
+  margin:auto;
+  padding:15px;
 }
 
 /* HEADER */
-.header-bar{
+.header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:20px;
+  margin-bottom:25px;
 }
-.header h1 {
-  margin: 0;
-  font-size: 28px;
-  color: #38bdf8;
+
+/* LOGO SHINE */
+.logo{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-weight:700;
 }
-.note {
-  font-size: 13px;
-  opacity: 0.8;
+
+.logo .tp{
+  font-size:22px;
+  background:linear-gradient(
+    120deg,
+    #b8860b 0%,
+    #f9e27d 20%,
+    #fff8dc 40%,
+    #f9e27d 60%,
+    #b8860b 80%
+  );
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:shine 4s linear infinite;
+  letter-spacing:1px;
 }
-.admin-link{
-  background:#dc2626;
-  color:white;
-  padding:6px 16px;
+
+@keyframes shine{
+  to{
+    background-position:200% center;
+  }
+}
+
+.logo .k{
+  font-size:14px;
+  padding:4px 10px;
   border-radius:999px;
-  font-size:13px;
-  font-weight:bold;
-  text-decoration:none;
+  background:linear-gradient(135deg,#d4af37,#f9e27d,#b8860b);
+  color:black;
+  font-weight:700;
+  box-shadow:0 0 15px rgba(212,175,55,.9);
 }
-.admin-link:hover{opacity:.85}
+
+.admin-link{
+  background:linear-gradient(135deg,#b8860b,#f9e27d);
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:12px;
+  text-decoration:none;
+  color:black;
+  font-weight:600;
+}
 
 /* CARD */
-.card {
-  background: #020617;
-  padding: 20px;
-  border-radius: 14px;
-  margin-bottom: 25px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+.card{
+  background:#111;
+  border:1px solid #3a2f0b;
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 0 25px rgba(212,175,55,.2);
+  animation:fadeIn .5s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
 }
 
 /* FORM */
-input, button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  border-radius: 8px;
-  border: none;
+input{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:12px;
+  border:1px solid #3a2f0b;
+  background:#0a0a0a;
+  color:#f5e6c4;
 }
-button {
-  background: #2563eb;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
+input:focus{
+  outline:none;
+  border:1px solid #d4af37;
+  box-shadow:0 0 10px rgba(212,175,55,.7);
 }
-button:hover {
-  background: #1d4ed8;
+
+button{
+  width:100%;
+  padding:13px;
+  margin-top:12px;
+  border-radius:14px;
+  border:none;
+  background:linear-gradient(135deg,#d4af37,#f9e27d,#b8860b);
+  color:black;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s;
+}
+button:hover{
+  transform:scale(1.03);
+  box-shadow:0 0 20px rgba(212,175,55,1);
 }
 
 /* TABLE */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #020617;
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
 }
-th, td {
-  padding: 10px;
-  text-align: center;
-  border-bottom: 1px solid #334155;
+th,td{
+  padding:10px 5px;
+  text-align:center;
 }
-th {
-  background: #1e293b;
+th{
+  color:#d4af37;
+  font-size:18px;
 }
-.total {
-  color: #22c55e;
-  font-weight: bold;
+tbody tr{
+  border-bottom:1px solid #3a2f0b;
 }
-.delete-btn {
-  background: #dc2626;
-  color: white;
-  border-radius: 6px;
-  padding: 5px 10px;
+.delete-btn{
+  background:#8b0000;
+  padding:5px 8px;
+  border-radius:8px;
+  font-size:12px;
+  border:none;
+  color:white;
 }
 
-/* FOOTER */
-.footer {
-  text-align: center;
-  font-size: 12px;
-  opacity: 0.6;
-  margin-top: 20px;
+tfoot{
+  color:#f9e27d;
+  font-weight:bold;
+  font-size:15px;
+}
+
+.footer{
+  text-align:center;
+  font-size:11px;
+  opacity:.5;
+  margin-top:20px;
 }
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
-  <!-- HEADER -->
-  <div class="header-bar">
-    <div class="header">
-      <h1>TP STORE STOK</h1>
-      <p class="note">Input angka saja • 1 = 1M</p>
-    </div>
-    <a href="admin.html" class="admin-link">ADMIN</a>
+<div class="header">
+  <div class="logo">
+    <span class="tp">TP STORE</span>
+    <span class="k">3990</span>
   </div>
+  <a href="admin.html" class="admin-link">ADMIN</a>
+</div>
 
-  <!-- PANDUAN -->
-    <div class="card">
-    <h3>📘 Panduan Singkat</h3>
-    <ul style="line-height:1.7;padding-left:18px;">
-      <li><b>1 = 1M (1 juta)</b> → isi angka saja</li>
-      <li>Gunakan <b>Nama </b> setiap update</li>
-      <li>Klik <b>Simpan Stok</b> untuk menambah / update</li>
-      <li>Stok otomatis masuk ke <b>TOTAL</b></li>
-      <li>Gunakan tombol <b>Hapus</b> hanya untuk stok sendiri hapus stok lama untuk update stok baru</li>
-    </ul>
-    <p class="note">
-      ⚠️ Gunakan halaman ini dengan jujur demi kepentingan bersama
-    </p>
-  </div>
+<div class="card">
+<h3>Input Stok SDA</h3>
+<form id="form">
+<input id="nama" placeholder="Nama / Nick ROK" required>
+<input id="food" type="number" placeholder="🌽 Food (1=1M)">
+<input id="wood" type="number" placeholder="🪵 Wood (1=1M)">
+<input id="stone" type="number" placeholder="🪨 Stone (1=1M)">
+<input id="gold" type="number" placeholder="🪙 Gold (1=1M)">
+<button type="submit">Simpan Stok</button>
+</form>
+<p id="status"></p>
+</div>
 
-  <!-- FORM -->
-  <div class="card">
-    <h3>➕ Input Stok SDA</h3>
-    <form id="form">
-      <input id="nama" placeholder="Nama / Nick ROK" required>
-      <input id="food" type="number" placeholder="Food (M)">
-      <input id="wood" type="number" placeholder="Wood (M)">
-      <input id="stone" type="number" placeholder="Stone (M)">
-      <input id="gold" type="number" placeholder="Gold (M)">
-      <button type="submit">Simpan Stok</button>
-    </form>
-    <p id="status"></p>
-  </div>
+<div class="card">
+<h3>Stok Tersedia</h3>
+<table>
+<thead>
+<tr>
+<th>Nama</th>
+<th>🌽</th>
+<th>🪵</th>
+<th>🪨</th>
+<th>🪙</th>
+<th></th>
+</tr>
+</thead>
+<tbody id="data"></tbody>
+<tfoot>
+<tr>
+<td>TOTAL</td>
+<td id="tFood"></td>
+<td id="tWood"></td>
+<td id="tStone"></td>
+<td id="tGold"></td>
+<td>-</td>
+</tr>
+</tfoot>
+</table>
+</div>
 
-  <!-- TABEL -->
-  <div class="card">
-    <h3>📊 Stok SDA Tersedia</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Nama</th>
-          <th>Food</th>
-          <th>Wood</th>
-          <th>Stone</th>
-          <th>Gold</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody id="data"></tbody>
-      <tfoot>
-        <tr class="total">
-          <td>TOTAL</td>
-          <td id="tFood"></td>
-          <td id="tWood"></td>
-          <td id="tStone"></td>
-          <td id="tGold"></td>
-          <td>-</td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-
-  <div class="footer">© TP STORE STOK</div>
-
+<div class="footer">© TP STORE 3990 – DARK GOLD SHINE</div>
 </div>
 
 <script>
-const url = "https://script.google.com/macros/s/AKfycbxsT7TzxPmqgi-fe8iT8HJQG8v2Vgsti0KuVZLD6t5kRx82-Nv-mOUd5McPgzBMvYlj/exec";
+const url="https://script.google.com/macros/s/AKfycbxsT7TzxPmqgi-fe8iT8HJQG8v2Vgsti0KuVZLD6t5kRx82-Nv-mOUd5McPgzBMvYlj/exec";
 
-form.onsubmit = e => {
-  e.preventDefault();
-  fetch(url,{
-    method:"POST",
-    body:JSON.stringify({
-      nama:nama.value,
-      food:food.value||0,
-      wood:wood.value||0,
-      stone:stone.value||0,
-      gold:gold.value||0
-    })
-  }).then(()=>{
-    status.innerText="✅ Stok berhasil disimpan";
-    form.reset();
-    loadData();
-  });
+form.onsubmit=e=>{
+e.preventDefault();
+fetch(url,{
+method:"POST",
+body:JSON.stringify({
+nama:nama.value,
+food:food.value||0,
+wood:wood.value||0,
+stone:stone.value||0,
+gold:gold.value||0
+})
+}).then(()=>{
+status.innerText="Stok berhasil disimpan";
+form.reset();
+loadData();
+});
 };
 
 function hapus(n){
-  if(!confirm("Hapus stok "+n+"?")) return;
-  fetch(url,{
-    method:"POST",
-    body:JSON.stringify({action:"delete",nama:n})
-  }).then(loadData);
+if(!confirm("Hapus stok "+n+"?")) return;
+fetch(url,{
+method:"POST",
+body:JSON.stringify({action:"delete",nama:n})
+}).then(loadData);
 }
 
 function loadData(){
-  fetch(url).then(r=>r.json()).then(d=>{
-    let h="";
-    d.list.forEach(r=>{
-      h+=`<tr>
-        <td>${r.nama}</td>
-        <td>${r.food}M</td>
-        <td>${r.wood}M</td>
-        <td>${r.stone}M</td>
-        <td>${r.gold}M</td>
-        <td><button class="delete-btn" onclick="hapus('${r.nama}')">Hapus</button></td>
-      </tr>`;
-    });
-    data.innerHTML=h;
-    tFood.innerText=d.total.food+"M";
-    tWood.innerText=d.total.wood+"M";
-    tStone.innerText=d.total.stone+"M";
-    tGold.innerText=d.total.gold+"M";
-  });
+fetch(url).then(r=>r.json()).then(d=>{
+let h="";
+d.list.forEach(r=>{
+h+=`<tr>
+<td>${r.nama}</td>
+<td>${r.food}M</td>
+<td>${r.wood}M</td>
+<td>${r.stone}M</td>
+<td>${r.gold}M</td>
+<td><button class="delete-btn" onclick="hapus('${r.nama}')">X</button></td>
+</tr>`;
+});
+data.innerHTML=h;
+
+tFood.innerText=d.total.food+"M";
+tWood.innerText=d.total.wood+"M";
+tStone.innerText=d.total.stone+"M";
+tGold.innerText=d.total.gold+"M";
+});
 }
 loadData();
 </script>
 
 </body>
-</html>
+  </html>
